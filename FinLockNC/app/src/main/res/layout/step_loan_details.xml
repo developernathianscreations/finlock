@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_loan_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/cardWhite"
+    app:strokeColor="@color/borderColor"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="22dp">
+
+        <!-- Section Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:text="4"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_step_badge"
+                android:layout_marginEnd="12dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loan Details"
+                    android:textColor="@color/textPrimary"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount, tenure and interest"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="1dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_loan_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Done"
+                android:textColor="@color/green"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_done_badge"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Loan Amount -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Requested Loan Amount *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:prefixText="₹ "
+            app:prefixTextColor="@color/secondary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etLoanAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter amount"
+                android:inputType="numberDecimal"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Tenure + Interest Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tenure (Months) *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:endIconMode="dropdown_menu">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/etTenure"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Select Tenure"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:inputType="none" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Interest Rate *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:suffixText=" %"
+                    app:suffixTextColor="@color/textSecondary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etInterestRate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="e.g. 12.5"
+                        android:inputType="numberDecimal"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- EMI Preview Card — shown after inputs are filled -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_emi_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            android:backgroundTint="@color/cardBlue"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Estimated Monthly EMI"
+                        android:textColor="@color/secondary"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.06" />
+
+                    <TextView
+                        android:id="@+id/tv_emi_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹ --"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="22sp"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="end">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Interest"
+                        android:textColor="@color/secondary"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/tv_total_interest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹ --"
+                        android:textColor="@color/primary"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:layout_marginTop="2dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

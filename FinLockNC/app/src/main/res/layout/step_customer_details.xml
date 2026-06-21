@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_customer_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/cardWhite"
+    app:strokeColor="@color/borderColor"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="22dp">
+
+        <!-- Section Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:text="1"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_step_badge"
+                android:layout_marginEnd="12dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Customer Details"
+                    android:textColor="@color/textPrimary"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Personal information"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="1dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_customer_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Done"
+                android:textColor="@color/green"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_done_badge"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Customer Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full Name *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:startIconDrawable="@drawable/ic_person"
+            app:startIconTint="@color/secondaryLight">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCustomerName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter full name"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Father Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Father's Name *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:startIconDrawable="@drawable/ic_person"
+            app:startIconTint="@color/secondaryLight">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etFatherName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter father's name"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Mobile Numbers Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mobile Number *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:startIconDrawable="@drawable/ic_phone"
+                    app:startIconTint="@color/secondaryLight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="10-digit number"
+                        android:inputType="phone"
+                        android:textSize="15sp"
+                        android:maxLength="10" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Alternate Mobile"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:startIconDrawable="@drawable/ic_phone"
+                    app:startIconTint="@color/secondaryLight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAlternateMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Optional"
+                        android:inputType="phone"
+                        android:textSize="15sp"
+                        android:maxLength="10" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Email -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email Address"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:startIconDrawable="@drawable/ic_email"
+            app:startIconTint="@color/secondaryLight">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="example@email.com"
+                android:inputType="textEmailAddress"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--
+        &lt;!&ndash; PAN & Aadhaar Row &ndash;&gt;
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PAN Number *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="ABCDE1234F"
+                        android:inputType="textCapCharacters"
+                        android:textSize="15sp"
+                        android:maxLength="10" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Aadhaar No. *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAadhar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="12-digit number"
+                        android:inputType="number"
+                        android:textSize="15sp"
+                        android:maxLength="12" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+-->
+
+        <!-- DOB & Occupation Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date of Birth *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconTint="@color/secondaryLight">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="DD/MM/YYYY"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Occupation *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etOccupation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="e.g. Farmer"
+                        android:inputType="text"
+                        android:textSize="15sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+<!--
+        &lt;!&ndash; Monthly Income — full width with ₹ prefix &ndash;&gt;
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monthly Income *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:prefixText="₹ "
+            app:prefixTextColor="@color/secondary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etIncome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter monthly income"
+                android:inputType="numberDecimal"
+                android:textSize="15sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+-->
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

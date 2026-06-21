@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- MAIN -->
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menu_home"
+            android:title="Home"
+            android:icon="@drawable/ic_home"/>
+
+        <item
+            android:id="@+id/menu_profile"
+            android:title="My Profile"
+            android:icon="@drawable/ic_profile"/>
+
+
+    </group>
+
+    <!-- SERVICES -->
+
+    <item android:title="SERVICES">
+
+        <menu>
+
+            <item
+                android:id="@+id/menu_support"
+                android:title="Services &amp; Support"
+                android:icon="@drawable/ic_support"/>
+
+           <!-- <item
+                android:id="@+id/menu_track"
+                android:title="Track Request"
+                android:icon="@drawable/ic_track"/>-->
+
+            <item
+                android:id="@+id/menu_chat"
+                android:title="Chat Support"
+                android:icon="@drawable/ic_whatsapp"/>
+
+        </menu>
+
+    </item>
+
+    <!-- SETTINGS -->
+
+    <item android:title="SETTINGS">
+
+        <menu>
+
+            <item
+                android:id="@+id/menu_settings"
+                android:title="Settings"
+                android:icon="@drawable/ic_settings"/>
+
+            <item
+                android:id="@+id/menu_language"
+                android:title="Language"
+                android:icon="@drawable/ic_language"/>
+
+            <item
+                android:id="@+id/menu_logout"
+                android:title="Logout"
+                android:icon="@drawable/ic_logout"/>
+
+        </menu>
+
+    </item>
+
+</menu>

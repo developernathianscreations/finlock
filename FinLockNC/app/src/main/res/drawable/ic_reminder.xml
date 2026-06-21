@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Bell body -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M18,8 C18,6.41 17.47,4.88 16.5,3.68 C15.54,2.47 14.18,1.75 12.77,1.75 C11.36,1.75 10,2.47 9.04,3.68 C8.08,4.88 7.54,6.41 7.54,8 C7.54,12.8 5.67,15.91 4.23,17.42 C3.87,17.83 3.72,18.32 3.72,18.83 C3.72,19.35 3.93,19.84 4.29,20.2 C4.65,20.56 5.14,20.77 5.65,20.77 L19.89,20.77 C20.4,20.77 20.89,20.56 21.25,20.2 C21.61,19.84 21.82,19.35 21.82,18.83 C21.82,18.32 21.67,17.83 21.31,17.42 C19.87,15.91 18,12.8 18,8 Z" />
+
+    <!-- Bell top -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,3 C12,3 10,1 8,3" />
+
+    <!-- Bell clapper -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,22 C13.1,22 14,21.1 14,20 L10,20 C10,21.1 10.9,22 12,22 Z" />
+
+</vector>

@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- ===== MANDATORY DOCUMENTS CARD ===== -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_mandatory_docs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/cardWhite"
+        app:strokeColor="@color/borderColor"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Section Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="📷"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Device &amp; User Images"
+                        android:textColor="@color/textPrimary"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mandatory - 3 images required"
+                        android:textColor="@color/red"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_mandatory_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✓ Done"
+                    android:textColor="@color/green"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:background="@drawable/bg_done_badge"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+            <!-- User Image -->
+            <include
+                layout="@layout/item_doc_upload_tile"
+                android:id="@+id/tile_user_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <!-- Device Image 1 - Front -->
+            <include
+                layout="@layout/item_doc_upload_tile"
+                android:id="@+id/tile_device_image1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Device Image 2 - Back -->
+            <include
+                layout="@layout/item_doc_upload_tile"
+                android:id="@+id/tile_device_image2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <!-- ===== OPTIONAL DOCUMENTS CARD ===== -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_optional_docs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/cardWhite"
+        app:strokeColor="@color/borderColor"
+        app:strokeWidth="1dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Section Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:text="📄"
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:layout_marginEnd="10dp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Identity &amp; Consent"
+                        android:textColor="@color/textPrimary"
+                        android:textStyle="bold"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Optional - PAN, Aadhaar &amp; Consent"
+                        android:textColor="@color/textSecondary"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_optional_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✓ Done"
+                    android:textColor="@color/green"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:background="@drawable/bg_done_badge"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <!-- PAN Card Upload Tile -->
+            <include
+                layout="@layout/item_doc_upload_tile"
+                android:id="@+id/tile_pan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp" />
+
+            <!-- Aadhaar Card Upload Tile -->
+            <include
+                layout="@layout/item_doc_upload_tile"
+                android:id="@+id/tile_aadhar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp" />
+            <TextView
+                android:id="@+id/tv_docs_counter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 of 6 completed"
+                android:textColor="@color/textSecondary"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp"
+                android:layout_marginStart="8dp"/>
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/borderColor"
+                android:layout_marginVertical="8dp" />
+
+            <!-- Consent Form Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/ic_consent"
+                        android:contentDescription="Consent Icon"
+                        android:layout_marginEnd="10dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Consent Form"
+                        android:textColor="@color/textPrimary"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tv_consent_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pending"
+                        android:textColor="@color/orange"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:paddingTop="3dp"
+                        android:paddingBottom="3dp"
+                        android:background="@drawable/bg_status_pending" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Review and sign the consent form"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="32dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="32dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_view_consent"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="View"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/primaryLight"
+                        app:cornerRadius="18dp"
+                        android:layout_marginEnd="6dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_sign_consent"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Sign Now"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        app:backgroundTint="@color/primary"
+                        app:cornerRadius="18dp"
+                        android:layout_marginStart="6dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

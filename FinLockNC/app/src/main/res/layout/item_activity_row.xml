@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    android:backgroundTint="@color/cardWhite"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <!-- Status Icon Container -->
+        <FrameLayout
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_marginEnd="14dp">
+
+            <ImageView
+                android:id="@+id/iv_activity_icon"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:src="@drawable/bg_activity_icon"
+                android:background="@drawable/bg_activity_icon"
+                android:padding="11dp"
+                android:contentDescription="Activity icon" />
+
+            <!-- Status dot badge -->
+            <View
+                android:id="@+id/view_status_dot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="bottom|end"
+                android:background="@drawable/bg_status_dot_green" />
+
+        </FrameLayout>
+
+        <!-- Text Section -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_activity_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ramesh Kumar"
+                android:textColor="@color/textPrimary"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_activity_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EMI collected · Loan #1042"
+                android:textColor="@color/textSecondary"
+                android:textSize="12sp"
+                android:layout_marginTop="3dp" />
+
+        </LinearLayout>
+
+        <!-- Amount & Date -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="end">
+
+            <TextView
+                android:id="@+id/tv_activity_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+₹5,000"
+                android:textColor="@color/green"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_activity_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today, 10:24 AM"
+                android:textColor="@color/textSecondary"
+                android:textSize="11sp"
+                android:layout_marginTop="3dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

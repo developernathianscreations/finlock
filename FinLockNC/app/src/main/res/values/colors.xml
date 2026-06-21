@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Primary Theme -->
+    <color name="primary">#1C1447</color>
+    <color name="primaryDark">#140E34</color>
+    <color name="primaryLight">#32286B</color>
+
+    <!-- Secondary Theme -->
+    <color name="secondary">#4B3F8A</color>
+    <color name="secondaryLight">#6A5AB5</color>
+
+    <!-- Accent -->
+    <color name="accentPink">#6A5AB5</color>
+
+    <!-- Background -->
+    <color name="screenBackground">#F7F7F7</color>
+
+    <!-- Cards -->
+    <color name="cardWhite">#FFFFFF</color>
+
+    <!-- Text -->
+    <color name="textPrimary">#212121</color>
+    <color name="textSecondary">#757575</color>
+
+    <!-- Borders -->
+    <color name="borderColor">#E0E0E0</color>
+
+    <!-- Status -->
+    <color name="green">#2E7D32</color>
+    <color name="red">#D32F2F</color>
+
+    <!-- Basic -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Slider Dots -->
+    <color name="dot_active">#1C1447</color>
+    <color name="dot_inactive">#CCCCCC</color>
+
+    <!-- Buttons -->
+    <color name="buttonPrimary">#1C1447</color>
+    <color name="buttonSecondary">#4B3F8A</color>
+
+    <color name="cardBlue">#EEF4FF</color>
+    <color name="cardPurple">#F5F1FF</color>
+    <color name="cardGreen">#EDF9F1</color>
+    <color name="cardOrange">#FFF4E8</color>
+
+    <color name="successBg">#E8F5E9</color>
+    <color name="dangerBg">#FFEBEE</color>
+
+    <color name="headerText">#D7DDF8</color>
+
+    <!-- Status: Success / Unlocked / Active -->
+    <color name="color_success">#22C55E</color>
+    <color name="color_success_dark">#16A34A</color>
+
+    <!-- Status: Danger / Locked / Overdue -->
+    <color name="color_danger">#EF4444</color>
+    <color name="color_danger_dark">#DC2626</color>
+
+    <!-- Status: Warning -->
+    <color name="color_warning">#F59E0B</color>
+
+    <!-- Neutral surfaces -->
+    <color name="color_surface">#FFFFFF</color>
+    <color name="color_surface_variant">#F1F5F9</color>
+    <color name="color_border">#E2E8F0</color>
+
+    <!-- Text -->
+    <color name="color_text_primary">#0F172A</color>
+    <color name="color_text_secondary">#64748B</color>
+    <color name="color_text_muted">#94A3B8</color>
+
+    <!-- Card Backgrounds -->
+    <color name="cardRed">#FFEBEE</color>
+    <color name="cardYellow">#FFFDE7</color>
+    <color name="orange">#F57C00</color>
+    <color name="yellow">#F9A825</color>
+    <color name="yellow_dark">#F57F17</color>
+
+</resources>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">FinLock NC</string>
+
+    <string name="login_title">Login with mPIN</string>
+
+    <string name="forgot_mpin">Forgot mPIN?</string>
+
+    <string name="use_fingerprint">USE FINGERPRINT</string>
+
+    <string name="login">LOGIN</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--
+    Add these style entries into your existing res/values/styles.xml (or themes.xml).
+    They define the custom input layout and toolbar title appearance
+    used throughout the Create Loan screens.
+-->
+
+    <!-- Rounded, filled TextInputLayout used across all loan form fields -->
+    <style name="LoanInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxStrokeColor">@color/borderColor</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1.5dp</item>
+        <item name="hintTextColor">@color/textSecondary</item>
+        <item name="android:textColorHint">@color/textSecondary</item>
+        <item name="boxBackgroundColor">@color/screenBackground</item>
+    </style>
+
+    <!-- Focused state override — uses brand primary color -->
+    <style name="LoanInputLayout.Focused">
+        <item name="boxStrokeColor">@color/primary</item>
+        <item name="hintTextColor">@color/primary</item>
+    </style>
+
+    <!-- Toolbar title text appearance -->
+    <style name="ToolbarTitleStyle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="CustomToolbarTitle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+</resources>
