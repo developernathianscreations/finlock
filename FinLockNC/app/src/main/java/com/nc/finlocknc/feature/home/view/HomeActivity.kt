@@ -11,6 +11,7 @@ import com.nc.finlocknc.R
 
 import com.nc.finlocknc.databinding.ActivityHomeBinding
 import com.nc.finlocknc.feature.CreateLoan.view.CreateLoanFragment
+import com.nc.finlocknc.feature.OngoingLoan.model.request.CustomerLoanData
 import com.nc.finlocknc.feature.auth.view.LoginActivity
 import com.nc.finlocknc.feature.profile.view.ProfileFragment
 import com.nc.finlocknc.feature.service.view.ServiceActivity
@@ -140,20 +141,19 @@ class HomeActivity : AppCompatActivity() {
             true
         }
     }
-    fun navigateToCustomerDetail(customerId: String) {
+    fun navigateToCustomerDetail(loan: CustomerLoanData) {
 
         hideMainUi()
 
         val fragment =
             com.nc.finlocknc.feature.CustomerDetail.view.CustomerDetailFragment
-                .newInstance(customerId)
+                .newInstance(loan)
 
         supportFragmentManager.beginTransaction()
             .replace(R.id.frameContainer, fragment)
             .addToBackStack("customer_detail")
             .commit()
-    }
-    private fun setupDrawer() {
+    }    private fun setupDrawer() {
 
         binding.toolbar.setNavigationIcon(R.drawable.ic_menu)
 

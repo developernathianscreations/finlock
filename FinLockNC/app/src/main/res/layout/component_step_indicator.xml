@@ -23,7 +23,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Step 1 of 6"
+            android:text="Step 1 of 7"
             android:textColor="@color/headerText"
             android:textSize="12sp"
             android:letterSpacing="0.06" />
@@ -46,7 +46,7 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <!-- Step 1 Dot (active) -->
+        <!-- Step 1 Dot -->
         <View
             android:id="@+id/dot_step1"
             android:layout_width="0dp"
@@ -94,6 +94,15 @@
         <!-- Step 6 Dot -->
         <View
             android:id="@+id/dot_step6"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:layout_weight="1"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/bg_step_dot_inactive" />
+
+        <!-- Step 7 Dot -->
+        <View
+            android:id="@+id/dot_step7"
             android:layout_width="0dp"
             android:layout_height="6dp"
             android:layout_weight="1"

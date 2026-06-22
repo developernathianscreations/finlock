@@ -6,6 +6,8 @@
     <color name="primaryDark">#140E34</color>
     <color name="primaryLight">#32286B</color>
 
+    <color name="grayt">#F5F5F5</color>
+
     <!-- Secondary Theme -->
     <color name="secondary">#4B3F8A</color>
     <color name="secondaryLight">#6A5AB5</color>
@@ -80,4 +82,10 @@
     <color name="yellow">#F9A825</color>
     <color name="yellow_dark">#F57F17</color>
 
+
+    <color name="privacy_background">#F7F7F7</color>
+    <color name="button_primary">#1C1447</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="locked_color">#D32F2F</color>
 </resources>

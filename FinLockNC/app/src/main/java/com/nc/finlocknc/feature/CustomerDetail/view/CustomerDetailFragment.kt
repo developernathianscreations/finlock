@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.nc.finlocknc.R
 import com.nc.finlocknc.databinding.FragmentCustomerDetailBinding
-import com.nc.finlocknc.feature.CreateLoan.repository.CustomerRepository
 import com.nc.finlocknc.feature.CustomerDetail.adapter.FeatureControlAdapter
 import com.nc.finlocknc.feature.CustomerDetail.adapter.RecentCommandsAdapter
 import com.nc.finlocknc.feature.CustomerDetail.model.request.CustomerDetail
@@ -20,6 +19,7 @@ import com.nc.finlocknc.feature.CustomerDetail.model.request.EMIInfo
 import com.nc.finlocknc.feature.CustomerDetail.model.request.FeatureControl
 import com.nc.finlocknc.feature.CustomerDetail.model.request.LocationInfo
 import com.nc.finlocknc.feature.CustomerDetail.model.request.RecentCommand
+import com.nc.finlocknc.feature.OngoingLoan.model.request.CustomerLoanData
 import com.nc.finlocknc.feature.home.view.HomeActivity
 
 class CustomerDetailFragment : Fragment() {
@@ -30,16 +30,15 @@ class CustomerDetailFragment : Fragment() {
     private lateinit var featureAdapter: FeatureControlAdapter
     private lateinit var recentCommandsAdapter: RecentCommandsAdapter
 
-    private var customerId: String = ""
-    private val repository = CustomerRepository()
+    private var loanData: CustomerLoanData? = null
 
     companion object {
-        private const val ARG_CUSTOMER_ID = "customer_id"
+        private const val ARG_LOAN_DATA = "loan_data"
 
-        fun newInstance(customerId: String): CustomerDetailFragment {
+        fun newInstance(loan: CustomerLoanData): CustomerDetailFragment {
             val fragment = CustomerDetailFragment()
             val bundle = Bundle()
-            bundle.putString(ARG_CUSTOMER_ID, customerId)
+            bundle.putSerializable(ARG_LOAN_DATA, loan)
             fragment.arguments = bundle
             return fragment
         }
@@ -57,21 +56,84 @@ class CustomerDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        customerId = arguments?.getString(ARG_CUSTOMER_ID) ?: "LN001"
+        loanData = arguments?.getSerializable(ARG_LOAN_DATA) as? CustomerLoanData
 
         setupToolbar()
         setupRecyclerViews()
         setupClickListeners()
-        loadCustomerDetails()
+
+        if (loanData != null) {
+            bindCustomerData(loanData!!)
+        } else {
+            Toast.makeText(requireContext(), "Customer data not found", Toast.LENGTH_SHORT).show()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun bindCustomerData(loan: CustomerLoanData) {
+        val customerDetail = convertToCustomerDetail(loan)
+        bindCustomer(customerDetail)
+        featureAdapter.updateList(customerDetail.featureControls)
+        recentCommandsAdapter.updateList(customerDetail.recentCommands)
+    }
+
+    private fun convertToCustomerDetail(loan: CustomerLoanData): CustomerDetail {
+        // ✅ Use product_amount instead of loan_amount
+        val loanAmount = "₹${loan.product_amount ?: "0"}"
+        val emiAmount = "₹${loan.emi_amount ?: "0"}"
+        val paidMonths = loan.paid_months ?: 0
+        val tenureMonths = loan.tenure_months ?: 0
+
+        // Calculate EMI progress
+        val totalLoanValue = loan.product_amount?.replace("₹", "")?.replace(",", "")?.trim()?.toDoubleOrNull() ?: 0.0
+        val emiValue = loan.emi_amount?.replace("₹", "")?.replace(",", "")?.trim()?.toDoubleOrNull() ?: 0.0
+        val paidAmount = paidMonths * emiValue
+        val pendingAmount = totalLoanValue - paidAmount
+
+        return CustomerDetail(
+            customerName = loan.name ?: "N/A",
+            customerId = "#${loan.id}",
+            mobileNumber = loan.contact ?: "N/A",
+            loanAmount = loanAmount,
+            emiStatus = loan.emi_status ?: "Active",
+            deviceInfo = DeviceInfo(
+                deviceName = "${loan.mobile_brand ?: ""} ${loan.mobile_model ?: ""}".trim().ifEmpty { "N/A" },
+                imei = loan.imei ?: "N/A",
+                onlineStatus = true,
+                lockStatus = "Unlocked",
+                battery = 82,
+                lastSeen = "N/A"
+            ),
+            locationInfo = LocationInfo(
+                latitude = 0.0,
+                longitude = 0.0
+            ),
+            emiInfo = EMIInfo(
+                totalLoan = loanAmount,
+                paidAmount = "₹${String.format("%.0f", paidAmount)}",
+                pendingAmount = "₹${String.format("%.0f", pendingAmount)}",
+                nextEmiDate = loan.next_emi_date ?: "N/A",
+                penalty = "₹0"
+            ),
+            retailerNotes = "Customer: ${loan.name}",
+            featureControls = listOf(
+                FeatureControl("1", "Schedule Lock", true),
+                FeatureControl("2", "WhatsApp Block", true),
+                FeatureControl("3", "USB Disable", true),
+                FeatureControl("4", "Location Tracking", true)
+            ),
+            recentCommands = listOf(
+                RecentCommand("Lock Device", "Success", "10:30 AM")
+            )
+        )
     }
 
     private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity()
-                .onBackPressedDispatcher
-                .onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
+
     private fun setupRecyclerViews() {
         featureAdapter = FeatureControlAdapter(mutableListOf()) { feature, enabled ->
             handleFeatureToggle(feature.id, enabled)
@@ -110,13 +172,6 @@ class CustomerDetailFragment : Fragment() {
         binding.btnSendReminder.setOnClickListener {
             Toast.makeText(requireContext(), "Reminder Sent", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun loadCustomerDetails() {
-        val detail = getCustomerDetail(customerId)
-        bindCustomer(detail)
-        featureAdapter.updateList(detail.featureControls)
-        recentCommandsAdapter.updateList(detail.recentCommands)
     }
 
     private fun bindCustomer(detail: CustomerDetail) {
@@ -171,7 +226,7 @@ class CustomerDetailFragment : Fragment() {
 
     private fun bindEmiStatusChip(status: String) {
         binding.tvEmiStatus.text = status.uppercase()
-        if (status == "Active") {
+        if (status.equals("Active", ignoreCase = true)) {
             binding.tvEmiStatus.setBackgroundResource(R.drawable.bg_chip_status_active)
         } else {
             binding.tvEmiStatus.setBackgroundResource(R.drawable.bg_chip_status_inactive)
@@ -210,7 +265,7 @@ class CustomerDetailFragment : Fragment() {
 
     private fun updateLockStatus(status: String) {
         binding.tvLockStatus.text = status.uppercase()
-        if (status == "Locked") {
+        if (status.equals("Locked", ignoreCase = true)) {
             binding.tvLockStatus.setBackgroundResource(R.drawable.bg_pill_locked)
             binding.btnLockDevice.isEnabled = false
             binding.btnUnlockDevice.isEnabled = true
@@ -243,77 +298,14 @@ class CustomerDetailFragment : Fragment() {
         Toast.makeText(requireContext(), "Opening Map...", Toast.LENGTH_SHORT).show()
     }
 
-    fun getCustomerDetail(customerId: String): CustomerDetail {
-        return when (customerId) {
-            "LN001" -> createCustomer("Rahul Sharma", "LN001", "9876543210", "₹5,00,000", "Active")
-            "LN002" -> createCustomer("Amit Patil", "LN002", "9876543211", "₹2,50,000", "Inactive")
-            "LN003" -> createCustomer("Priya Singh", "LN003", "9876543212", "₹7,50,000", "Active")
-            "LN004" -> createCustomer("Rohit Kumar", "LN004", "9876543213", "₹3,20,000", "Inactive")
-            "LN005" -> createCustomer("Sneha Patil", "LN005", "9876543214", "₹8,00,000", "Active")
-            "LN006" -> createCustomer("Vikram Mehta", "LN006", "9876543215", "₹4,50,000", "Active")
-            "LN007" -> createCustomer("Neha Gupta", "LN007", "9876543216", "₹1,80,000", "Inactive")
-            else -> createCustomer("Rajesh Verma", "LN008", "9876543217", "₹6,20,000", "Active")
-        }
-    }
-
-    private fun createCustomer(
-        name: String,
-        id: String,
-        mobile: String,
-        amount: String,
-        status: String
-    ): CustomerDetail {
-        return CustomerDetail(
-            customerName = name,
-            customerId = id,
-            mobileNumber = mobile,
-            loanAmount = amount,
-            emiStatus = status,
-            deviceInfo = DeviceInfo(
-                deviceName = "Samsung M35",
-                imei = "123456789012345",
-                onlineStatus = true,
-                lockStatus = "Unlocked",
-                battery = 82,
-                lastSeen = "2 min ago"
-            ),
-            locationInfo = LocationInfo(
-                latitude = 18.5204,
-                longitude = 73.8567
-            ),
-            emiInfo = EMIInfo(
-                totalLoan = amount,
-                paidAmount = "₹1,50,000",
-                pendingAmount = "₹1,00,000",
-                nextEmiDate = "15 July 2026",
-                penalty = "₹500"
-            ),
-            retailerNotes = "Customer detail for $name",
-            featureControls = listOf(
-                FeatureControl("1", "Schedule Lock", true),
-                FeatureControl("2", "WhatsApp Block", true),
-                FeatureControl("3", "USB Disable", true),
-                FeatureControl("4", "Location Tracking", true)
-            ),
-            recentCommands = listOf(
-                RecentCommand("Lock Device", "Success", "10:30 AM")
-            )
-        )
-    }
-
-    // REMOVED onResume and onDestroyView hide/show calls
-    // The HomeActivity now handles hiding/showing
     override fun onResume() {
         super.onResume()
-
         (activity as? HomeActivity)?.hideMainUi()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         (activity as? HomeActivity)?.showMainUi()
-
         _binding = null
     }
 }

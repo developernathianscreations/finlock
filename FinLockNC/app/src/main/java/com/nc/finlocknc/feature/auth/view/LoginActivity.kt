@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.nc.finlocknc.R
+import com.nc.finlocknc.core.common.UiState
 import com.nc.finlocknc.databinding.ActivityLoginBinding
 import com.nc.finlocknc.feature.auth.LoginViewModelFactory.LoginViewModelFactory
 import com.nc.finlocknc.feature.auth.PrefManager.PrefManager
@@ -72,19 +73,61 @@ class LoginActivity : AppCompatActivity() {
         setupClickListeners()
 
         // Observe login result
-        viewModel.loginResult.observe(this) { isSuccess ->
-            if (isSuccess) {
-                Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, HomeActivity::class.java))
-                finish()
-            } else {
-                Toast.makeText(this, "Wrong MPIN. Please try again.", Toast.LENGTH_SHORT).show()
-                clearMpinBoxes()
+        viewModel.loginState.observe(this) { state ->
+
+            when (state) {
+
+                is UiState.Loading -> {
+                    binding.btnLogin.isEnabled = false
+                }
+
+                is UiState.Success -> {
+
+                    binding.btnLogin.isEnabled = true
+
+                    if (state.data) {
+
+                        Toast.makeText(
+                            this,
+                            "Login Successful",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        startActivity(
+                            Intent(
+                                this,
+                                HomeActivity::class.java
+                            )
+                        )
+
+                        finish()
+
+                    } else {
+
+                        Toast.makeText(
+                            this,
+                            "Wrong MPIN. Please try again.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+                        clearMpinBoxes()
+                    }
+                }
+
+                is UiState.Error -> {
+
+                    binding.btnLogin.isEnabled = true
+
+                    Toast.makeText(
+                        this,
+                        state.message,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
-
-    private fun initializeDigitBoxes() {
+        private fun initializeDigitBoxes() {
         digitBoxes = arrayOf(
             binding.digit1,
             binding.digit2,

@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.nc.finlocknc.R
 import com.nc.finlocknc.databinding.FragmentSettingsBinding
 import com.nc.finlocknc.feature.home.view.HomeActivity
+import com.nc.finlocknc.feature.privacy.view.PrivacyFragment
+import com.nc.finlocknc.feature.set_new_mpin.view.SetNewMpinFragment
 
 class SettingsFragment : Fragment() {
 
@@ -32,8 +34,13 @@ class SettingsFragment : Fragment() {
 
     private fun setupClickListeners() {
         // Change MPIN
+
         binding.cardChangeMpin.setOnClickListener {
-            Toast.makeText(requireContext(), "Change MPIN clicked", Toast.LENGTH_SHORT).show()
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameContainer, SetNewMpinFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         // Fingerprint Switch
@@ -77,10 +84,12 @@ class SettingsFragment : Fragment() {
 
         // Privacy Policy
         binding.cardPrivacy.setOnClickListener {
-            Toast.makeText(requireContext(), "Privacy Policy", Toast.LENGTH_SHORT).show()
-        }
 
-        // Help & Support
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.frameContainer, PrivacyFragment())
+                .addToBackStack(null)
+                .commit()
+        }
         binding.cardHelp.setOnClickListener {
             Toast.makeText(requireContext(), "Help & Support", Toast.LENGTH_SHORT).show()
         }

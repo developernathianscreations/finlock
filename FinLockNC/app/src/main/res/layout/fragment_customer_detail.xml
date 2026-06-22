@@ -13,19 +13,22 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/primary"
         app:navigationIcon="@drawable/ic_arrow_back"
-        android:padding="9dp"
-        app:navigationIconTint="@android:color/white">
+        android:paddingTop="10dp"
+        app:navigationIconTint="@color/white">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
             android:text="Customer Details"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"/>
+            android:textColor="@color/white"
+            android:textAppearance="@style/CustomToolbarTitle"
+            android:textStyle="bold"
+            android:paddingTop="5dp"
+            android:layout_gravity="center_vertical"
+            android:translationY="2dp"/>
 
     </com.google.android.material.appbar.MaterialToolbar>
+
     <!-- ScrollView with proper padding -->
     <ScrollView
         android:layout_width="match_parent"
@@ -276,6 +279,15 @@
                     </LinearLayout>
 
                 </LinearLayout>
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="@style/CustomProgressBar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:background="@drawable/progressbar_background" />
 
             </androidx.cardview.widget.CardView>
 

@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    kotlin("kapt")
+
 }
 
 android {
@@ -70,5 +72,23 @@ dependencies {
 
     implementation(libs.androidx.viewpager2)
 
-    implementation("androidx.gridlayout:gridlayout:1.0.0")
+// Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+// OkHttp
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+// Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+// ViewModel + LiveData
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation("androidx.fragment:fragment-ktx:1.8.6")
+
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 }

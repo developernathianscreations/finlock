@@ -48,7 +48,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="5dp">
-
             <!-- Header Banner -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
@@ -242,20 +241,29 @@
             </LinearLayout>
 
             <!-- ===== FILTER CHIPS SECTION - SINGLE ROW ===== -->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="12dp">
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="@style/CustomProgressBar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"
+                    android:background="@drawable/progressbar_background" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Filter by EMI Due Date"
                     android:textColor="@color/textPrimary"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
+                    style="@style/SectionTitleStyle"
                     android:layout_marginBottom="8dp" />
 
                 <!-- Horizontal ScrollView for chips to ensure single row -->
@@ -339,9 +347,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="My Active Loans"
-                    android:textColor="@color/textPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    style="@style/SectionTitleStyle"
+                    android:textColor="@color/textPrimary"/>
 
 <!--
                 <TextView

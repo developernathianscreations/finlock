@@ -5,13 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.nc.finlocknc.R
 import com.nc.finlocknc.databinding.ItemOngoingLoanBinding
-import com.nc.finlocknc.feature.OngoingLoan.model.request.OngoingLoan
+import com.nc.finlocknc.feature.OngoingLoan.model.request.CustomerLoanData
 import java.text.SimpleDateFormat
 import java.util.*
 
 class OngoingLoanAdapter(
-    private var loanList: MutableList<OngoingLoan>,
-    private val onItemClick: (OngoingLoan) -> Unit
+    private var loanList: MutableList<CustomerLoanData>,
+    private val onItemClick: (CustomerLoanData) -> Unit
 ) : RecyclerView.Adapter<OngoingLoanAdapter.LoanViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoanViewHolder {
@@ -29,39 +29,46 @@ class OngoingLoanAdapter(
 
     override fun getItemCount(): Int = loanList.size
 
-    fun updateList(newList: MutableList<OngoingLoan>) {
+    fun updateList(newList: MutableList<CustomerLoanData>) {
         loanList = newList
         notifyDataSetChanged()
     }
 
     inner class LoanViewHolder(
         private val binding: ItemOngoingLoanBinding,
-        private val onItemClick: (OngoingLoan) -> Unit
+        private val onItemClick: (CustomerLoanData) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(loan: OngoingLoan) {
-            binding.tvCustomerName.text = loan.customerName
-            binding.tvLoanId.text = loan.loanId
-            binding.tvLoanAmount.text = loan.loanAmount
-            binding.tvEmiAmount.text = loan.emiAmount
-            binding.tvTenure.text = loan.tenure
-            binding.tvNextEmiDate.text = loan.nextEmiDate
-            binding.tvStatus.text = loan.status
+        fun bind(loan: CustomerLoanData) {
+            binding.tvCustomerName.text = loan.name ?: "N/A"
+            binding.tvLoanId.text = "#${loan.id}"
+            // ✅ Use product_amount instead of loan_amount
+            binding.tvLoanAmount.text = "₹${loan.product_amount ?: "0"}"
+            binding.tvEmiAmount.text = "₹${loan.emi_amount ?: "0"}"
+
+            // Tenure display
+            val tenureMonths = loan.tenure_months ?: 0
+            val paidMonths = loan.paid_months ?: 0
+            binding.tvTenure.text = "$paidMonths/$tenureMonths mo"
+
+            binding.tvNextEmiDate.text = loan.next_emi_date ?: "N/A"
+            binding.tvStatus.text = loan.emi_status ?: "Active"
 
             // Calculate progress percentage
-            val progressPercent = if (loan.tenureMonths > 0) {
-                (loan.paidMonths * 100) / loan.tenureMonths
+            val progressPercent = if (tenureMonths > 0) {
+                (paidMonths * 100) / tenureMonths
             } else {
                 0
             }
             binding.tvProgressPercent.text = "$progressPercent%"
             binding.progressRepayment.progress = progressPercent
 
-            // Set random icon
+            // Set icon
             binding.tvLoanIcon.setImageResource(R.drawable.ic_person)
 
             // Set status color
-            if (loan.status == "Active") {
+            val status = loan.emi_status ?: "Active"
+            if (status == "Active") {
                 binding.tvStatus.setBackgroundResource(R.drawable.bg_signature_status_success)
                 binding.tvStatus.setTextColor(binding.root.context.getColor(R.color.green))
             } else {
@@ -70,9 +77,9 @@ class OngoingLoanAdapter(
             }
 
             // Apply date-based color coding
-            applyDateBasedColor(loan.nextEmiDate)
+            applyDateBasedColor(loan.next_emi_date ?: "N/A")
 
-            // Set click listener on the entire card
+            // Set click listener
             binding.cardOngoingLoan.setOnClickListener {
                 onItemClick(loan)
             }

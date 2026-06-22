@@ -8,7 +8,6 @@
     android:layout_height="match_parent">
 
     <!-- MAIN CONTENT -->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,14 +32,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="FinLock NC"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp"
+                    android:textColor="@color/white"
+                    android:textAppearance="@style/CustomToolbarTitle"
                     android:textStyle="bold"
                     android:layout_gravity="center_vertical"
                     android:translationY="2dp"/>
+
             </com.google.android.material.appbar.MaterialToolbar>
         </com.google.android.material.appbar.AppBarLayout>
         <!-- FRAGMENT CONTAINER -->
+
 
         <FrameLayout
             android:id="@+id/frameContainer"

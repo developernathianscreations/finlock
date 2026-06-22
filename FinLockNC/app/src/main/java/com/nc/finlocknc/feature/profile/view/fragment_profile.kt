@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.nc.finlocknc.R
 import com.nc.finlocknc.databinding.FragmentProfileBinding
+import com.nc.finlocknc.feature.auth.PrefManager.PrefManager
 import com.nc.finlocknc.feature.home.view.HomeActivity
 
 class ProfileFragment : Fragment() {
@@ -58,22 +59,42 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupProfileData() {
-        // User Info
-        binding.tvUserName.text = "Krushna Shaligram"
-        binding.tvUserHandle.text = "@krushna_finlock"
-        binding.tvUserEmail.text = "krushna@gmail.com"
-        binding.tvUserId.text = "FIN001"
-        binding.tvAvatarInitial.text = "K"
 
-        // Personal Details
-        binding.tvDetailName.text = "Krushna Shaligram"
-        binding.tvDetailDob.text = "08/01/2001"
-        binding.tvDetailGender.text = "Male"
-        binding.tvDetailEmail.text = "krushna@gmail.com"
-        binding.tvDetailMobile.text = "+91 91770 97310"
-        binding.tvDetailCustomerId.text = "FIN001"
+        val pref = PrefManager(requireContext())
+
+        binding.tvUserName.text =
+            pref.getRetailerName()
+
+        binding.tvUserEmail.text =
+            pref.getRetailerEmail()
+
+        binding.tvUserId.text =
+            pref.getRetailerId().toString()
+
+        binding.tvAvatarInitial.text =
+            pref.getRetailerName()
+                .take(1)
+                .uppercase()
+
+        binding.tvDetailName.text =
+            pref.getRetailerName()
+
+        binding.tvDetailEmail.text =
+            pref.getRetailerEmail()
+
+        binding.tvDetailMobile.text =
+            pref.getMobile()
+
+        binding.tvDetailCustomerId.text =
+            pref.getRetailerId().toString()
+
+        binding.tvDetailGender.text =
+            "-"
+
+        binding.tvDetailDob.text =
+            "-"
+
     }
-
     override fun onResume() {
         super.onResume()
         (activity as? HomeActivity)?.hideMainUi()

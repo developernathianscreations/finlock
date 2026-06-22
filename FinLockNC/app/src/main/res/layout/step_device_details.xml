@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_device_details"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/cardWhite"
+    app:strokeColor="@color/borderColor"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="22dp">
+
+        <!-- Section Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:text="5"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_step_badge"
+                android:layout_marginEnd="12dp" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Device Details"
+                    android:textColor="@color/textPrimary"
+                    android:textStyle="bold"
+                    android:textSize="17sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Enter device and IMEI information"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:layout_marginTop="1dp" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_device_done"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="✓ Done"
+                android:textColor="@color/green"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/bg_done_badge"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <!-- Device Type -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Device Type *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <!-- Radio Group for Device Type -->
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_vertical">
+
+            <RadioButton
+                android:id="@+id/dtPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📱 Phone"
+                android:checked="true"
+                android:textColor="@color/textPrimary"
+                android:buttonTint="@color/primary"
+                android:layout_marginEnd="24dp" />
+
+            <RadioButton
+                android:id="@+id/dtTab"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📟 Tab"
+                android:textColor="@color/textPrimary"
+                android:buttonTint="@color/primary"
+                android:layout_marginStart="0dp" />
+
+        </RadioGroup>
+
+        <!-- Brand Dropdown -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Brand *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:startIconDrawable="@drawable/ic_brand"
+            app:startIconTint="@color/secondaryLight">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/autoCompleteBrand"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select brand"
+                android:inputType="none"
+                android:textSize="15sp"
+                android:drawableEnd="@drawable/ic_dropdown"
+                android:drawableTint="@color/textSecondary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Model Dropdown -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Model *"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/LoanInputLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:startIconDrawable="@drawable/ic_model"
+            app:startIconTint="@color/secondaryLight">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/autoCompleteModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select model"
+                android:inputType="none"
+                android:textSize="15sp"
+                android:drawableEnd="@drawable/ic_dropdown"
+                android:drawableTint="@color/textSecondary" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- IMEI Numbers Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="IMEI 1 *"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:startIconDrawable="@drawable/ic_imei"
+                    app:startIconTint="@color/secondaryLight"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_scan"
+                    app:endIconTint="@color/primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etImei1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="15-digit IMEI"
+                        android:inputType="number"
+                        android:textSize="15sp"
+                        android:maxLength="15" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="IMEI 2 (Optional)"
+                    android:textColor="@color/textSecondary"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:layout_marginBottom="6dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoanInputLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:startIconDrawable="@drawable/ic_imei"
+                    app:startIconTint="@color/secondaryLight"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_scan"
+                    app:endIconTint="@color/primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etImei2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Optional"
+                        android:inputType="number"
+                        android:textSize="15sp"
+                        android:maxLength="15" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Hint Text -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="* All fields except IMEI 2 are required"
+            android:textColor="@color/textSecondary"
+            android:textSize="12sp"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

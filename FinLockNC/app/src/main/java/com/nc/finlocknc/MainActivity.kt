@@ -17,13 +17,19 @@ class MainActivity : AppCompatActivity() {
         if (prefManager.isLoggedIn()) {
 
             startActivity(
-                Intent(this, LoginActivity::class.java)
+                Intent(
+                    this,
+                    LoginActivity::class.java
+                )
             )
 
         } else {
 
             startActivity(
-                Intent(this, MobileActivity::class.java)
+                Intent(
+                    this,
+                    MobileActivity::class.java
+                )
             )
         }
 
