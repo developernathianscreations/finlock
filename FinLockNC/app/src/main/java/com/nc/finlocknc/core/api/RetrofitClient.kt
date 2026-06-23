@@ -11,7 +11,7 @@ import java.util.Locale
 
 object RetrofitClient {
 
-    private const val BASE_URL = "https://wardwiz.in/"
+    private const val BASE_URL = "https://finlocknc.com/"
 
     private fun getBearerToken(): String {
         val sdf = SimpleDateFormat("yyyyMMddHH", Locale.getDefault())

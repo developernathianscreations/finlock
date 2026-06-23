@@ -62,6 +62,10 @@ class OngoingLoanFragment : Fragment() {
                 if (loanList != null && loanList.isNotEmpty()) {
                     allLoans.clear()
                     allLoans.addAll(loanList)
+
+                    // ✅ Reverse the list to show latest first
+                    allLoans.reverse()
+
                     applyDefaultSorting()
                     updateStats()
                 } else {
@@ -128,7 +132,10 @@ class OngoingLoanFragment : Fragment() {
     }
 
     private fun sortLoansByPriority(loans: MutableList<CustomerLoanData>): MutableList<CustomerLoanData> {
-        return loans.sortedWith(compareBy { loan ->
+        // ✅ Sort by ID descending (latest first) while maintaining priority
+        return loans.sortedWith(compareByDescending<CustomerLoanData> {
+            it.id ?: 0
+        }.thenBy { loan ->
             val days = getDaysDifference(loan.next_emi_date ?: "N/A")
             when {
                 days < 0 -> 0
@@ -144,7 +151,8 @@ class OngoingLoanFragment : Fragment() {
     }
 
     private fun updateStats() {
-        val totalActive = allLoans.count { it.emi_status == "Active" }
+        // ✅ Count active loans based on status == "open"
+        val totalActive = allLoans.count { it.status == "open" }
         val totalAmount = allLoans.sumOf {
             try {
                 it.product_amount?.replace("₹", "")?.replace(",", "")?.trim()?.toIntOrNull() ?: 0
@@ -201,16 +209,19 @@ class OngoingLoanFragment : Fragment() {
         filteredLoans = when (filter) {
             "Expired" -> {
                 allLoans.filter { isDateExpired(it.next_emi_date ?: "N/A") }
+                    .sortedByDescending { it.id ?: 0 }
                     .sortedBy { getDaysDifference(it.next_emi_date ?: "N/A") }
                     .toMutableList()
             }
             "DueSoon" -> {
                 allLoans.filter { isDateDueSoon(it.next_emi_date ?: "N/A") }
+                    .sortedByDescending { it.id ?: 0 }
                     .sortedBy { getDaysDifference(it.next_emi_date ?: "N/A") }
                     .toMutableList()
             }
             "Upcoming" -> {
                 allLoans.filter { isDateUpcoming(it.next_emi_date ?: "N/A") }
+                    .sortedByDescending { it.id ?: 0 }
                     .sortedBy { getDaysDifference(it.next_emi_date ?: "N/A") }
                     .toMutableList()
             }

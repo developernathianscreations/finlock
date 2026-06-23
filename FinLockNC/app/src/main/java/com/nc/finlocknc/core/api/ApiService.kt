@@ -17,13 +17,13 @@ import retrofit2.http.Part
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("paylock/app-assets/api/get_retailer_details.php")
+    @GET("app-assets/api/get_retailer_details.php")
     suspend fun getCustomerByMobile(
         @Query("mobile") mobile: String
     ): Response<RetailerDetailResponse>
 
 
-    @GET("paylock/app-assets/api/get_loan_customer_by_retailer.php")
+    @GET("app-assets/api/get_loan_customer_by_retailer.php")
     suspend fun getCustomerList(@Query("id") id: String): LoanCustomerResponse
 
 /*
@@ -31,17 +31,17 @@ interface ApiService {
     suspend fun getSupportTeam(): SupportResponse
 */
 
-    @POST("paylock/app-assets/api/store_loan_details.php")
+    @POST("app-assets/api/store_loan_details.php")
     suspend fun addCustomer(
         @Body customerData: AddCustomerRequest
     ): AddCustomerResponse
 
 
-    @GET("paylock/app-assets/api/get_license_key.php")
+    @GET("app-assets/api/get_license_key.php")
     suspend fun getLicenseKey(@Query("id") id: Int): Response<LicenseKeyResponse>
 
     @Multipart
-    @POST("paylock/app-assets/api/store_image.php")
+    @POST("app-assets/api/store_image.php")
     suspend fun uploadImage(
         @Part("path") path: RequestBody,
         @Part("type") type: RequestBody,

@@ -394,6 +394,15 @@
 -->
 
             </LinearLayout>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/CustomProgressBar"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                android:background="@drawable/progressbar_background" />
 
             <!-- RecyclerView for Keys List -->
             <androidx.recyclerview.widget.RecyclerView

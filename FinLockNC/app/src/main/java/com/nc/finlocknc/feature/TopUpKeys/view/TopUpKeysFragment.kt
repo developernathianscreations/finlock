@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.nc.finlocknc.R
 import com.nc.finlocknc.databinding.FragmentTopUpKeysBinding
+import com.nc.finlocknc.feature.OngoingLoan.model.request.CustomerLoanData
+import com.nc.finlocknc.feature.OngoingLoan.viewmodel.CustomerLoanListViewModel
 import com.nc.finlocknc.feature.TopUpKeys.adatper.KeyAdapter
-import com.nc.finlocknc.feature.TopUpKeys.model.request.KeyTransaction
+import com.nc.finlocknc.feature.auth.PrefManager.PrefManager
 import com.nc.finlocknc.feature.home.view.HomeActivity
 
 class TopUpKeysFragment : Fragment() {
@@ -19,85 +21,271 @@ class TopUpKeysFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var adapter: KeyAdapter
+    private lateinit var prefManager: PrefManager
 
-    private val keyTransactions = mutableListOf(
-        KeyTransaction("Alice Smith", "KEY-PLK-87654", "Acct: #PLK-87654", "Active", "2 days ago"),
-        KeyTransaction("Bob Johnson", "KEY-PLK-76543", "Acct: #PLK-76543", "Active", "5 days ago"),
-        KeyTransaction("Carol Davis", "KEY-PLK-65432", "Acct: #PLK-65432", "Inactive", "1 week ago"),
-        KeyTransaction("David Wilson", "KEY-PLK-54321", "Acct: #PLK-54321", "Active", "2 weeks ago"),
-        KeyTransaction("Emma Brown", "KEY-PLK-43210", "Acct: #PLK-43210", "Active", "3 weeks ago"),
-        KeyTransaction("Frank Miller", "KEY-PLK-32109", "Acct: #PLK-32109", "Inactive", "1 month ago")
-    )
+    private val customerViewModel: CustomerLoanListViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentTopUpKeysBinding.inflate(inflater, container, false)
+
+        _binding =
+            FragmentTopUpKeysBinding.inflate(
+                inflater,
+                container,
+                false
+            )
+
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
+        super.onViewCreated(
+            view,
+            savedInstanceState
+        )
+
+        prefManager =
+            PrefManager(requireContext())
+
         setupToolbar()
         setupRecyclerView()
-        setupStats()
+        setupObservers()
         setupClickListeners()
+
+        binding.progressBar.visibility =
+            View.GONE
+
+        loadKeyStats()
+        fetchCustomerData()
     }
+
     private fun setupToolbar() {
+
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+
+            requireActivity()
+                .onBackPressedDispatcher
+                .onBackPressed()
         }
     }
 
-
     private fun setupRecyclerView() {
-        adapter = KeyAdapter(keyTransactions)
-        binding.recyclerKeys.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerKeys.adapter = adapter
-        binding.recyclerKeys.setHasFixedSize(true)
+
+        adapter =
+            KeyAdapter(
+                mutableListOf()
+            )
+
+        binding.recyclerKeys.layoutManager =
+            LinearLayoutManager(
+                requireContext()
+            )
+
+        binding.recyclerKeys.adapter =
+            adapter
     }
 
-    private fun setupStats() {
-        val totalKeys = 25000
-        val usedKeys = 21500
-        val remainingKeys = 3500
-        val usedPercent = (usedKeys * 100 / totalKeys)
+    private fun fetchCustomerData() {
 
-        binding.tvTotalKeys.text = String.format("%,d", totalKeys)
-        binding.tvUsedKeys.text = String.format("%,d", usedKeys)
-        binding.tvRemainingKeys.text = String.format("%,d", remainingKeys)
-        binding.tvUsedPercent.text = "$usedPercent%"
-        binding.progressUsage.progress = usedPercent
+        showLoading(true)
+
+        val retailerId =
+            prefManager.getRetailerId()
+
+        if (retailerId != 0) {
+
+            customerViewModel.fetchCustomerList(
+                retailerId.toString()
+            )
+
+        } else {
+
+            showLoading(false)
+
+            Toast.makeText(
+                requireContext(),
+                "Retailer Id not found",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+
+    private fun setupObservers() {
+
+        customerViewModel.customerLoadData.observe(
+            viewLifecycleOwner
+        ) { response ->
+
+            showLoading(false)
+
+            if (response != null && response.status == "success") {
+                val loanList = response.data
+                if (loanList != null && loanList.isNotEmpty()) {
+                    // ✅ Update adapter with the data (adapter will reverse it)
+                    adapter.updateList(loanList.toMutableList())
+
+                    // ✅ Update stats based on actual data
+                    updateLoanStats(loanList)
+                } else {
+                    adapter.updateList(mutableListOf())
+                    Toast.makeText(
+                        requireContext(),
+                        "No key data available",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to load key data",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            // use PrefManager values only
+            loadKeyStats()
+        }
+
+        customerViewModel.loading.observe(
+            viewLifecycleOwner
+        ) {
+            showLoading(it)
+        }
+
+        customerViewModel.error.observe(
+            viewLifecycleOwner
+        ) { error ->
+
+            showLoading(false)
+
+            if (error.isNotEmpty()) {
+
+                Toast.makeText(
+                    requireContext(),
+                    error,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun updateLoanStats(
+        loans: List<CustomerLoanData>
+    ) {
+        val total =
+            loans.size
+
+        // ✅ Use status field instead of mobile_status
+        val active =
+            loans.count {
+                it.status == "open"
+            }
+
+        val inactive =
+            total - active
+
+        binding.tvTotalKeys.text =
+            total.toString()
+
+        binding.tvUsedKeys.text =
+            active.toString()
+
+        binding.tvRemainingKeys.text =
+            inactive.toString()
+
+        val percent =
+            if (total > 0)
+                (active * 100 / total)
+            else
+                0
+
+        binding.tvUsedPercent.text =
+            "$percent%"
+
+        binding.progressUsage.progress =
+            percent
+    }
+
+    private fun loadKeyStats() {
+
+        binding.tvTotalKeys.text =
+            prefManager.getTotalKeys()
+
+        binding.tvUsedKeys.text =
+            prefManager.getUsedKeys()
+
+        binding.tvRemainingKeys.text =
+            prefManager.getAssignedKeys()
+
+        val total =
+            prefManager.getTotalKeys()
+                .toIntOrNull() ?: 0
+
+        val used =
+            prefManager.getUsedKeys()
+                .toIntOrNull() ?: 0
+
+        val percent =
+            if (total > 0)
+                (used * 100 / total)
+            else
+                0
+
+        binding.tvUsedPercent.text =
+            "$percent%"
+
+        binding.progressUsage.progress =
+            percent
     }
 
     private fun setupClickListeners() {
-        // FAB Button
+
         binding.fabTopUp.setOnClickListener {
-            Toast.makeText(requireContext(), "Generate new keys feature coming soon!", Toast.LENGTH_SHORT).show()
-        }
 
-        // Toolbar navigation
-        binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            Toast.makeText(
+                requireContext(),
+                "Generate new keys feature coming soon!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+    }
 
-        // View All button
-/*
-        binding.tvViewAll.setOnClickListener {
-            Toast.makeText(requireContext(), "View all transactions", Toast.LENGTH_SHORT).show()
-        }
-*/
+    private fun showLoading(
+        show: Boolean
+    ) {
+
+        binding.progressBar.visibility =
+            if (show)
+                View.VISIBLE
+            else
+                View.GONE
+
+        binding.recyclerKeys.visibility =
+            if (show)
+                View.GONE
+            else
+                View.VISIBLE
     }
 
     override fun onResume() {
         super.onResume()
-        (activity as? HomeActivity)?.hideMainUi()
+
+        (activity as? HomeActivity)
+            ?.hideMainUi()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        (activity as? HomeActivity)?.showMainUi()
+
+        (activity as? HomeActivity)
+            ?.showMainUi()
+
         _binding = null
     }
 }

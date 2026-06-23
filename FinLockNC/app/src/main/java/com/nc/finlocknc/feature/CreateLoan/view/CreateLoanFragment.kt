@@ -116,7 +116,8 @@ class CreateLoanFragment : Fragment() {
         ),
         "Nothing" to listOf(
             "Phone (2a)", "Phone (2)", "Phone (1)"
-        )
+        ),
+        "Other" to listOf("Enter model manually")
     )
 
     // ✅ Tab Brands & Models
@@ -156,7 +157,8 @@ class CreateLoanFragment : Fragment() {
         ),
         "Google" to listOf(
             "Pixel Tablet", "Pixel Slate"
-        )
+        ),
+        "Other" to listOf("Enter model manually")
     )
 
     private var currentBrandModels = brandModelsPhone // Default to Phone
@@ -254,11 +256,15 @@ class CreateLoanFragment : Fragment() {
 
     // ===== SHOW/HIDE PROGRESS =====
     private fun showProgress() {
-        binding.progressContainer.visibility = View.VISIBLE
+        _binding?.let {
+            it.progressContainer.visibility = View.VISIBLE
+        }
     }
 
     private fun hideProgress() {
-        binding.progressContainer.visibility = View.GONE
+        _binding?.let {
+            it.progressContainer.visibility = View.GONE
+        }
     }
 
     // ===== SETUP DEVICE AUTOCOMPLETE FIELDS =====
@@ -282,23 +288,47 @@ class CreateLoanFragment : Fragment() {
         binding.step5Device.autoCompleteBrand.setOnItemClickListener { _, _, position, _ ->
             val selectedBrand = brandList[position]
             val models = currentBrandModels[selectedBrand] ?: emptyList()
-            val modelAdapter = ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                models
-            )
-            binding.step5Device.autoCompleteModel.setAdapter(modelAdapter)
-            binding.step5Device.autoCompleteModel.text?.clear()
+
+            // ✅ Handle "Other" brand selection
+            if (selectedBrand == "Other") {
+                // Allow manual entry for model
+                binding.step5Device.autoCompleteModel.setAdapter(null)
+                binding.step5Device.autoCompleteModel.setText("")
+                binding.step5Device.autoCompleteModel.hint = "Enter model name"
+                binding.step5Device.autoCompleteModel.isEnabled = true
+                binding.step5Device.autoCompleteModel.inputType = android.text.InputType.TYPE_CLASS_TEXT
+            } else {
+                // Normal brand with model list
+                val modelAdapter = ArrayAdapter(
+                    requireContext(),
+                    android.R.layout.simple_dropdown_item_1line,
+                    models
+                )
+                binding.step5Device.autoCompleteModel.setAdapter(modelAdapter)
+                binding.step5Device.autoCompleteModel.hint = "Select model"
+                binding.step5Device.autoCompleteModel.inputType = android.text.InputType.TYPE_NULL
+                binding.step5Device.autoCompleteModel.text?.clear()
+            }
+
+            // ✅ Show toast for "Other" selection
+            if (selectedBrand == "Other") {
+                Toast.makeText(requireContext(), "Please enter the model name manually", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.step5Device.autoCompleteModel.setOnClickListener {
-            binding.step5Device.autoCompleteModel.showDropDown()
+            // Only show dropdown if adapter is set (not for "Other" brand)
+            if (binding.step5Device.autoCompleteModel.adapter != null) {
+                binding.step5Device.autoCompleteModel.showDropDown()
+            }
         }
         binding.step5Device.autoCompleteModel.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.step5Device.autoCompleteModel.showDropDown()
+            if (hasFocus && binding.step5Device.autoCompleteModel.adapter != null) {
+                binding.step5Device.autoCompleteModel.showDropDown()
+            }
         }
 
-        // ✅ Device type Radio Button selection
+        // Device type Radio Button selection
         binding.step5Device.dtPhone.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 currentBrandModels = brandModelsPhone
@@ -349,7 +379,6 @@ class CreateLoanFragment : Fragment() {
         }
     }
 
-    // ✅ Helper function to update brand list
     private fun updateBrandList(brandModels: Map<String, List<String>>) {
         val newBrandList = brandModels.keys.toList()
         val brandAdapter = ArrayAdapter(
@@ -361,15 +390,14 @@ class CreateLoanFragment : Fragment() {
         binding.step5Device.autoCompleteBrand.text?.clear()
         binding.step5Device.autoCompleteModel.text?.clear()
         binding.step5Device.autoCompleteModel.setAdapter(null)
+        binding.step5Device.autoCompleteModel.hint = "Select model"
+        binding.step5Device.autoCompleteModel.inputType = android.text.InputType.TYPE_NULL
     }
 
     // ===== SETUP OBSERVERS =====
     private fun setupObservers() {
-
         uploadViewModel.uploadResponse.observe(viewLifecycleOwner) { result ->
-
             result.onSuccess { uploadResult ->
-
                 val uploadedUrl = uploadResult.response.url
 
                 when (uploadResult.type) {
@@ -384,12 +412,11 @@ class CreateLoanFragment : Fragment() {
                 checkUploadsComplete()
 
             }.onFailure { error ->
-
                 hideProgress()
-
-                binding.btnNext.isEnabled = true
-                binding.btnNext.text = "Submit Application"
-
+                _binding?.let {
+                    it.btnNext.isEnabled = true
+                    it.btnNext.text = "Submit Application"
+                }
                 Toast.makeText(
                     requireContext(),
                     error.message,
@@ -400,14 +427,13 @@ class CreateLoanFragment : Fragment() {
 
         // Customer API Response
         addCustomerViewModel.customerPostData.observe(viewLifecycleOwner) { response ->
-
             hideProgress()
-
-            binding.btnNext.isEnabled = true
-            binding.btnNext.text = "Submit Application"
+            _binding?.let {
+                it.btnNext.isEnabled = true
+                it.btnNext.text = "Submit Application"
+            }
 
             if (response.status.equals("success", true)) {
-
                 Toast.makeText(
                     requireContext(),
                     response.message,
@@ -419,41 +445,30 @@ class CreateLoanFragment : Fragment() {
                     .popBackStack()
 
             } else {
-
                 Toast.makeText(
                     requireContext(),
                     response.message,
                     Toast.LENGTH_LONG
                 ).show()
 
-                if (
-                    response.message.contains(
-                        "IMEI already exists",
-                        true
-                    )
-                ) {
-
+                if (response.message.contains("IMEI already exists", true)) {
                     currentStep = 5
-
                     showStep(currentStep)
-
                     updateStepIndicator(currentStep)
-
-                    binding.step5Device.etImei1.error =
-                        "IMEI already exists"
-
-                    binding.step5Device.etImei1.requestFocus()
+                    _binding?.let {
+                        it.step5Device.etImei1.error = "IMEI already exists"
+                        it.step5Device.etImei1.requestFocus()
+                    }
                 }
             }
         }
 
         addCustomerViewModel.error.observe(viewLifecycleOwner) {
-
             hideProgress()
-
-            binding.btnNext.isEnabled = true
-            binding.btnNext.text = "Submit Application"
-
+            _binding?.let {
+                it.btnNext.isEnabled = true
+                it.btnNext.text = "Submit Application"
+            }
             Toast.makeText(
                 requireContext(),
                 it,
@@ -462,14 +477,15 @@ class CreateLoanFragment : Fragment() {
         }
 
         addCustomerViewModel.isLoading.observe(viewLifecycleOwner) {
-
             if (it) {
                 showProgress()
             } else {
                 hideProgress()
             }
         }
-    }    // ===== LICENSE KEY =====
+    }
+
+    // ===== LICENSE KEY =====
     private fun getLicenseKey() {
         val prefManager = PrefManager(requireContext())
         val retailerId = prefManager.getRetailerId()
@@ -678,14 +694,8 @@ class CreateLoanFragment : Fragment() {
 
     private fun checkUploadsComplete() {
         if (completedUploads == totalUploads) {
-
-            // Keep loader visible
-            submitLoanApplication()
-        }
-
-        if (completedUploads == totalUploads) {
             isUploading = false
-            hideProgress()
+            // Don't hide progress here - let submitLoanApplication handle it
             submitLoanApplication()
         }
     }
@@ -762,24 +772,31 @@ class CreateLoanFragment : Fragment() {
     }
 
     private fun showStep(step: Int) {
-        val steps = listOf(
-            binding.step1Customer.root,
-            binding.step2Address.root,
-            binding.step3Guarantor.root,
-            binding.step4Loan.root,
-            binding.step5Device.root,
-            binding.step6Documents.root,
-            binding.step7Signature.root
-        )
+        // ✅ Check if binding is not null before accessing
+        _binding?.let { binding ->
+            val steps = listOf(
+                binding.step1Customer.root,
+                binding.step2Address.root,
+                binding.step3Guarantor.root,
+                binding.step4Loan.root,
+                binding.step5Device.root,
+                binding.step6Documents.root,
+                binding.step7Signature.root
+            )
 
-        steps.forEach { it.visibility = View.GONE }
-        steps[step - 1].visibility = View.VISIBLE
+            steps.forEach { it.visibility = View.GONE }
+            steps[step - 1].visibility = View.VISIBLE
 
-        binding.btnBack.visibility = if (step == 1) View.GONE else View.VISIBLE
-        binding.btnNext.text = if (step == totalSteps) "Submit Application" else "Continue"
+            binding.btnBack.visibility = if (step == 1) View.GONE else View.VISIBLE
+            binding.btnNext.text = if (step == totalSteps) "Submit Application" else "Continue"
 
-        binding.nestedScrollView.post {
-            binding.nestedScrollView.smoothScrollTo(0, 0)
+            // ✅ Safe post with null check
+            binding.nestedScrollView.post {
+                // ✅ Check if binding is still valid
+                _binding?.let {
+                    it.nestedScrollView.smoothScrollTo(0, 0)
+                }
+            }
         }
     }
 
@@ -952,7 +969,7 @@ class CreateLoanFragment : Fragment() {
         if (loanAmount.isEmpty()) {
             binding.step4Loan.etLoanAmount.error = "Loan amount is required"
             isValid = false
-        } else if (loanAmount.toIntOrNull() == null || loanAmount.toInt() <= 0) {
+        } else if (loanAmount.toIntOrNull() == null || loanAmount.toInt() < 0) {
             binding.step4Loan.etLoanAmount.error = "Enter valid loan amount"
             isValid = false
         } else {
@@ -971,8 +988,8 @@ class CreateLoanFragment : Fragment() {
         if (interestRate.isEmpty()) {
             binding.step4Loan.etInterestRate.error = "Interest rate is required"
             isValid = false
-        } else if (interestRate.toDoubleOrNull() == null || interestRate.toDouble() <= 0) {
-            binding.step4Loan.etInterestRate.error = "Enter valid interest rate"
+        } else if (interestRate.toDoubleOrNull() == null || interestRate.toDouble() < 0) {
+            binding.step4Loan.etInterestRate.error = "Enter valid interest rate (0 or positive)"
             isValid = false
         } else {
             binding.step4Loan.etInterestRate.error = null
@@ -1002,7 +1019,7 @@ class CreateLoanFragment : Fragment() {
 
         val model = binding.step5Device.autoCompleteModel.text.toString().trim()
         if (model.isEmpty()) {
-            binding.step5Device.autoCompleteModel.error = "Please select model"
+            binding.step5Device.autoCompleteModel.error = "Please select/enter model"
             isValid = false
         } else {
             binding.step5Device.autoCompleteModel.error = null
@@ -1161,12 +1178,14 @@ class CreateLoanFragment : Fragment() {
         val tenure = binding.step4Loan.etTenure.text.toString().trim().toIntOrNull() ?: 0
         val rate = binding.step4Loan.etInterestRate.text.toString().trim().toDoubleOrNull() ?: 0.0
 
-        if (amount > 0 && tenure > 0 && rate > 0) {
+        if (amount > 0 && tenure > 0) {
             val emi = calculateEMI(amount, rate, tenure)
             val totalInterest = (emi * tenure) - amount
             binding.step4Loan.cardEmiPreview.visibility = View.VISIBLE
             binding.step4Loan.tvEmiAmount.text = String.format("₹ %.0f", emi)
             binding.step4Loan.tvTotalInterest.text = String.format("₹ %.0f", totalInterest)
+        } else {
+            binding.step4Loan.cardEmiPreview.visibility = View.GONE
         }
     }
 
@@ -1178,8 +1197,10 @@ class CreateLoanFragment : Fragment() {
 
         if (savedLicenseKey.isEmpty()) {
             Toast.makeText(requireContext(), "License key not found. Please try again.", Toast.LENGTH_SHORT).show()
-            binding.btnNext.isEnabled = true
-            binding.btnNext.text = "Submit Application"
+            _binding?.let {
+                it.btnNext.isEnabled = true
+                it.btnNext.text = "Submit Application"
+            }
             return
         }
 
@@ -1214,13 +1235,13 @@ class CreateLoanFragment : Fragment() {
             name = name,
             email = email,
             contact = contact,
-            //pan = "",
-          //  aadhar = "",
+           // pan = uploadedPanUrl ?: "",
+           // aadhar = uploadedAadharUrl ?: "",
             guaranator_name = guarantorName,
             guaranator_mobile = guarantorMobile,
             product_amount = productAmount,
             no_of_emi = noOfEmi,
-            //financer_bank = "",
+          //  financer_bank = "",
             down_payment = downPayment,
             balance_amount = balanceAmount,
             emi_amount = emiAmount,
@@ -1254,6 +1275,7 @@ class CreateLoanFragment : Fragment() {
     // ===== TENURE DROPDOWN =====
     private fun setupTenureDropdown() {
         val tenureList = listOf(
+            "0 Months",
             "3 Months", "6 Months", "9 Months", "12 Months",
             "18 Months", "24 Months", "36 Months", "48 Months", "60 Months"
         )
@@ -1280,10 +1302,19 @@ class CreateLoanFragment : Fragment() {
 
     // ===== EMI CALCULATOR =====
     private fun calculateEMI(principal: Double, rate: Double, tenureInMonths: Int): Double {
+        if (tenureInMonths <= 0) return 0.0
+
+        // If rate is 0, simple division (no interest)
+        if (rate <= 0) {
+            return principal / tenureInMonths
+        }
+
         val monthlyRate = rate / (12 * 100)
+        if (monthlyRate <= 0) return principal / tenureInMonths
+
         val emi = principal * monthlyRate * Math.pow(1 + monthlyRate, tenureInMonths.toDouble()) /
                 (Math.pow(1 + monthlyRate, tenureInMonths.toDouble()) - 1)
-        return if (emi.isNaN()) 0.0 else emi
+        return if (emi.isNaN() || !emi.isFinite()) 0.0 else emi
     }
 
     // ===== LIFECYCLE =====

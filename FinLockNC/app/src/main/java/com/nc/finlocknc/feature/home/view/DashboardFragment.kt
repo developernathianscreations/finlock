@@ -5,14 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.nc.finlocknc.R
 import com.nc.finlocknc.databinding.FragmentDashboardBinding
 import com.nc.finlocknc.feature.CreateLoan.view.CreateLoanFragment
 import com.nc.finlocknc.feature.OngoingLoan.view.OngoingLoanFragment
 import com.nc.finlocknc.feature.TopUpKeys.view.TopUpKeysFragment
+import com.nc.finlocknc.feature.auth.LoginViewModelFactory.LoginViewModelFactory
 import com.nc.finlocknc.feature.auth.PrefManager.PrefManager
+import com.nc.finlocknc.feature.auth.model.response.RetailerDetailResponse
+import com.nc.finlocknc.feature.auth.repository.AuthRepositoryImpl
+import com.nc.finlocknc.feature.auth.viewmodel.LoginViewModel
 import com.nc.finlocknc.feature.home.component.AutoSlideBanner
 import com.nc.finlocknc.feature.home.model.request.BannerImageModel
 
@@ -22,6 +26,10 @@ class DashboardFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var autoSlideBanner: AutoSlideBanner
+    private lateinit var prefManager: PrefManager
+
+    // ✅ Add ViewModel for fetching fresh data
+    private lateinit var loginViewModel: LoginViewModel
 
     // Banner items with text data
     private val bannerImages = listOf(
@@ -39,13 +47,37 @@ class DashboardFragment : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {
         super.onViewCreated(view, savedInstanceState)
+
+        prefManager = PrefManager(requireContext())
+
+        // ✅ Initialize ViewModel with Factory
+        val repository = AuthRepositoryImpl(
+            PrefManager(requireContext())
+        )
+
+        loginViewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(repository)
+        )[LoginViewModel::class.java]
 
         initViews()
         setupAutoSlideBanner()
         setupClickListeners()
-        updateStatistics()
+        setupObservers()
+
+        loadUserData()
+        refreshStatistics()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // ✅ Refresh data every time user comes back to this fragment
+        refreshStatistics()
         loadUserData()
     }
 
@@ -114,66 +146,144 @@ class DashboardFragment : Fragment() {
         }
     }
 
-    private fun updateStatistics() {
-
-        val prefManager =
-            PrefManager(requireContext())
-
-        binding.tvTotalLoans.text =
-            prefManager.getTotalLoans()
-
-        binding.tvOpenLoans.text =
-            prefManager.getOpenLoans()
-
-        binding.tvClosedLoans.text =
-            prefManager.getClosedLoans()
-
-        binding.tvTotalKeys.text =
-            prefManager.getTotalKeys()
-
-        binding.tvAssignedKeys.text =
-            prefManager.getAssignedKeys()
-
-    /*    binding.tvPortfolioAmount.text =
-            prefManager.getPortfolioAmount()*/
-    }
-private fun loadUserData() {
-
-        val prefManager =
-            PrefManager(requireContext())
-
-        val userName =
-            prefManager.getRetailerName()
-
-        val hour =
-            java.util.Calendar.getInstance()
-                .get(java.util.Calendar.HOUR_OF_DAY)
-
-        val greeting =
-            when {
-
-                hour in 5..11 ->
-                    "Good Morning"
-
-                hour in 12..16 ->
-                    "Good Afternoon"
-
-                hour in 17..20 ->
-                    "Good Evening"
-
-                else ->
-                    "Good Night"
+    // ===== SETUP OBSERVERS =====
+    private fun setupObservers() {
+        // ✅ Observe customer data response to update statistics
+        loginViewModel.customerState.observe(viewLifecycleOwner) { state ->
+            when (state) {
+                is com.nc.finlocknc.core.common.UiState.Success -> {
+                    val response = state.data
+                    if (response.status == "success") {
+                        // ✅ Update PrefManager with fresh data
+                        updatePrefManagerData(response)
+                        // ✅ Refresh UI with updated data
+                        updateStatistics()
+                    } else {
+                        // If API returns error, use cached data
+                        updateStatistics()
+                    }
+                }
+                is com.nc.finlocknc.core.common.UiState.Error -> {
+                    // ✅ If API fails, still show cached data
+                    updateStatistics()
+                }
+                else -> {
+                    // Loading state - don't update
+                }
             }
-
-        binding.tvGreeting.text =
-            greeting
-
-        binding.tvUserName.text =
-            if (userName.isNotEmpty())
-                "$userName 👋"
-            else
-                "User 👋"
+        }
     }
+
+    // ===== UPDATE PREFMANAGER WITH FRESH DATA =====
+    private fun updatePrefManagerData(
+        response: RetailerDetailResponse
+    ) {
+        // ✅ Update Retailer Details
+        val retailer = response.retailer
+
+        prefManager.saveRetailerName(
+            retailer.name ?: ""
+        )
+
+        prefManager.saveRetailerEmail(
+            retailer.email ?: ""
+        )
+
+        prefManager.saveMobile(
+            retailer.mobile ?: ""
+        )
+
+        prefManager.saveRetailerId(
+            retailer.id
+        )
+
+        // ✅ Update Keys Details
+        val keys = response.keys
+
+        prefManager.saveTotalKeys(
+            keys.total_keys.toString()
+        )
+
+        prefManager.saveUsedKeys(
+            keys.used_keys ?: "0"
+        )
+
+        prefManager.saveAssignedKeys(
+            keys.assigned_keys ?: "0"
+        )
+
+        // ✅ Update Loans Details
+        val loans = response.loans
+
+        prefManager.saveTotalLoans(
+            loans.total_loans.toString()
+        )
+
+        prefManager.saveOpenLoans(
+            loans.open_loans ?: "0"
+        )
+
+        prefManager.saveClosedLoans(
+            loans.closed_loans ?: "0"
+        )
+    }
+
+    // ===== REFRESH STATISTICS =====
+    private fun refreshStatistics() {
+        val mobile = prefManager.getMobile()
+
+        if (mobile.isNotEmpty()) {
+            // ✅ Fetch fresh data from API
+            loginViewModel.fetchCustomerByMobile(mobile)
+        } else {
+            // ✅ If no mobile, use cached data
+            updateStatistics()
+        }
+    }
+
+    private fun updateStatistics() {
+        // ✅ Get data from PrefManager (which now has fresh data)
+        binding.tvTotalLoans.text = prefManager.getTotalLoans()
+        binding.tvOpenLoans.text = prefManager.getOpenLoans()
+        binding.tvClosedLoans.text = prefManager.getClosedLoans()
+        binding.tvTotalKeys.text = prefManager.getTotalKeys()
+        binding.tvAssignedKeys.text = prefManager.getAssignedKeys()
+
+        // ✅ Update progress or additional stats if needed
+        updateProgressStats()
+    }
+
+    private fun updateProgressStats() {
+        val totalLoans = prefManager.getTotalLoans().toIntOrNull() ?: 0
+        val openLoans = prefManager.getOpenLoans().toIntOrNull() ?: 0
+
+        // Calculate percentage for visual indicators
+        val openPercent = if (totalLoans > 0) {
+            (openLoans * 100) / totalLoans
+        } else {
+            0
+        }
+
+        // You can use this for progress bars or other visual elements
+        // binding.progressOpenLoans.progress = openPercent
+    }
+
+    private fun loadUserData() {
+        val userName = prefManager.getRetailerName()
+        val hour = java.util.Calendar.getInstance()
+            .get(java.util.Calendar.HOUR_OF_DAY)
+
+        val greeting = when {
+            hour in 5..11 -> "Good Morning"
+            hour in 12..16 -> "Good Afternoon"
+            hour in 17..20 -> "Good Evening"
+            else -> "Good Night"
+        }
+
+        binding.tvGreeting.text = greeting
+        binding.tvUserName.text = if (userName.isNotEmpty()) "$userName 👋" else "User 👋"
+    }
+
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }

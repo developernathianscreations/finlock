@@ -90,12 +90,16 @@ class CustomerDetailFragment : Fragment() {
         val paidAmount = paidMonths * emiValue
         val pendingAmount = totalLoanValue - paidAmount
 
+        // ✅ Determine EMI status based on loan status field
+        val loanStatus = loan.status ?: "close"
+        val emiStatus = if (loanStatus == "open") "Active" else "Inactive"
+
         return CustomerDetail(
             customerName = loan.name ?: "N/A",
             customerId = "#${loan.id}",
             mobileNumber = loan.contact ?: "N/A",
             loanAmount = loanAmount,
-            emiStatus = loan.emi_status ?: "Active",
+            emiStatus = emiStatus, // ✅ Now shows Active/Inactive based on status
             deviceInfo = DeviceInfo(
                 deviceName = "${loan.mobile_brand ?: ""} ${loan.mobile_model ?: ""}".trim().ifEmpty { "N/A" },
                 imei = loan.imei ?: "N/A",
@@ -185,6 +189,7 @@ class CustomerDetailFragment : Fragment() {
             ?.toString()
             ?: "?"
 
+        // ✅ Bind EMI Status Chip with correct Active/Inactive status
         bindEmiStatusChip(detail.emiStatus)
 
         binding.tvDeviceName.text = detail.deviceInfo.deviceName
@@ -226,10 +231,18 @@ class CustomerDetailFragment : Fragment() {
 
     private fun bindEmiStatusChip(status: String) {
         binding.tvEmiStatus.text = status.uppercase()
+
+        // ✅ Set background and text color based on status
         if (status.equals("Active", ignoreCase = true)) {
             binding.tvEmiStatus.setBackgroundResource(R.drawable.bg_chip_status_active)
+            binding.tvEmiStatus.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.color_success)
+            )
         } else {
             binding.tvEmiStatus.setBackgroundResource(R.drawable.bg_chip_status_inactive)
+            binding.tvEmiStatus.setTextColor(
+                ContextCompat.getColor(requireContext(), R.color.color_danger)
+            )
         }
     }
 

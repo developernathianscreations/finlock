@@ -1,10 +1,13 @@
 package com.nc.finlocknc.feature.auth.view
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.nc.finlocknc.core.common.UiState
 import com.nc.finlocknc.databinding.ActivityMobileBinding
@@ -12,7 +15,7 @@ import com.nc.finlocknc.feature.auth.LoginViewModelFactory.LoginViewModelFactory
 import com.nc.finlocknc.feature.auth.PrefManager.PrefManager
 import com.nc.finlocknc.feature.auth.repository.AuthRepositoryImpl
 import com.nc.finlocknc.feature.auth.viewmodel.LoginViewModel
-
+import android.Manifest
 class MobileActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMobileBinding
@@ -23,7 +26,7 @@ class MobileActivity : AppCompatActivity() {
 
         binding = ActivityMobileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        requestAppPermissions()
         val repository = AuthRepositoryImpl(
             PrefManager(this)
         )
@@ -208,6 +211,7 @@ class MobileActivity : AppCompatActivity() {
 
                     finish()
                 }
+
                 is UiState.Error -> {
 
                     binding.btnContinue.isEnabled =
@@ -236,4 +240,77 @@ class MobileActivity : AppCompatActivity() {
             }
         }
     }
+    private fun requestAppPermissions() {
+
+        val permissions =
+            mutableListOf<String>()
+
+        if (
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+
+            permissions.add(
+                Manifest.permission.CAMERA
+            )
+        }
+
+        if (
+            android.os.Build.VERSION.SDK_INT >=
+            android.os.Build.VERSION_CODES.TIRAMISU
+        ) {
+
+            if (
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_MEDIA_IMAGES
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                permissions.add(
+                    Manifest.permission.READ_MEDIA_IMAGES
+                )
+            }
+
+        } else {
+
+            if (
+                ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+
+                permissions.add(
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+                )
+            }
+        }
+
+        if (permissions.isNotEmpty()) {
+
+            permissionLauncher.launch(
+                permissions.toTypedArray()
+            )
+        }
+    }
+    private val permissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+
+            val cameraGranted =
+                permissions[Manifest.permission.CAMERA] ?: false
+
+            if (cameraGranted) {
+
+                Toast.makeText(
+                    this,
+                    "Permissions Granted",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 }
