@@ -28,7 +28,7 @@ data class Keys(
 )
 
 data class Loans(
-    val total_loans: Int,
-    val open_loans: String,
-    val closed_loans: String
+    val total_loans: Int?,
+    val open_loans: String?,
+    val closed_loans: String?
 )

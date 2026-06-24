@@ -195,13 +195,12 @@ class MobileActivity : AppCompatActivity() {
                     )
 
                     prefManager.saveOpenLoans(
-                        loans.open_loans
+                        loans.open_loans ?: "0"
                     )
 
                     prefManager.saveClosedLoans(
-                        loans.closed_loans
+                        loans.closed_loans ?: "0"
                     )
-
                     startActivity(
                         Intent(
                             this,
